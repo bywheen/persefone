@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persefone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define la fuente Inter, que es moderna y legible */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Evita barras de desplazamiento */
+            /* Fondo imitando un cielo estrellado con aurora sutil */
+            background: radial-gradient(ellipse at bottom, #0b132b 0%, #1c2541 30%, #3a506b 70%, #5bc0be 100%); /* Degradado radial oscuro */
+            display: flex; /* Para centrar el contenido */
+            flex-direction: column; /* Organiza los elementos en columna */
+            align-items: center; /* Centra horizontalmente */
+            justify-content: center; /* Centra verticalmente */
+            min-height: 100vh; /* Ocupa la altura completa de la vista */
+            position: relative; /* Para que los pseudo-elementos se posicionen correctamente */
+        }
+
+        /* Capa de "estrellas" con animación de parpadeo */
+        body::before {
+            content: '';
+            position: fixed; /* Fijo para que no se mueva con el scroll si hubiera */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                        radial-gradient(circle, rgba(255, 255, 255, 0.05) 2px, transparent 2px);
+            background-size: 60px 60px, 100px 100px; /* Tamaño de las "estrellas" */
+            background-position: 0 0, 50% 50%;
+            z-index: -1; /* Envía al fondo */
+            opacity: 0.8;
+            animation: twinkle 5s infinite ease-in-out; /* Animación de parpadeo */
+        }
+
+        /* Capa sutil de "neblina" o "aurora" con ligero movimiento horizontal */
+        body::after {
+            content: '';
+            position: fixed; /* Fijo para que no se mueva */
+            top: 10%; /* Empieza un poco más abajo */
+            left: 0;
+            width: 100%;
+            height: 40%; /* Cubre un 40% de la altura de la vista */
+            background: radial-gradient(ellipse at center, rgba(137, 207, 240, 0.1) 0%, transparent 70%), /* Azul claro */
+                        radial-gradient(ellipse at center, rgba(255, 182, 193, 0.05) 0%, transparent 70%); /* Rosa claro */
+            opacity: 0.6;
+            z-index: -2; /* Envía más al fondo que las estrellas */
+            animation: nebula-drift 20s infinite alternate ease-in-out,
+                       slow-pan 60s infinite linear; /* Animación de paneo lento */
+        }
+
+        /* Animación de parpadeo de las estrellas */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.02); }
+        }
+
+        /* Animación de paneo lento de la neblina */
+        @keyframes slow-pan {
+            0% { transform: translateX(-10%); }
+            100% { transform: translateX(10%); }
+        }
+
+        /* Animación de deriva de la neblina */
+        @keyframes nebula-drift {
+            0% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(10%) scale(1.02); opacity: 0.7; }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        /* Contenedor principal de la rosa encantada */
+        .enchanted-rose-container {
+            position: relative;
+            width: 300px; /* Ancho fijo para la rosa y la cúpula */
+            height: 320px; /* Alto fijo */
+            margin: 0 auto; /* Centrar horizontalmente */
+            transform: translateY(-10%); /* Ajuste fino de posición vertical */
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 10; /* Asegura que esté por encima del fondo */
+        }
+
+        /* Estilo de la cúpula de cristal */
+        .bell-jar {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05); /* Muy ligeramente transparente */
+            border-radius: 55% 55% 0px 0px / 100% 100% 10px 10px; /* Forma de cúpula */
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1), /* Sombra exterior para el brillo */
+            inset 0 0 20px rgba(255, 255, 255, 0.2); /* Sombra interior para efecto de cristal */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(2px); /* Efecto de desenfoque detrás de la cúpula */
+            z-index: 20;
+            overflow: hidden; /* Para contener los pétalos que caen */
+        }
+
+        /* Base de la cúpula */
+        .bell-jar::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 20px;
+            background: #333; /* Color oscuro para la base */
+            border-radius: 5px 5px 0 0;
+            box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.3);
+            z-index: 21;
+        }
+
+        /* Estilo de la rosa */
+        .rose {
+            position: absolute;
+            bottom: 25px; /* Ajusta la posición de la rosa dentro de la cúpula */
+            width: 100px; /* Ancho de la rosa */
+            height: 150px; /* Alto de la rosa */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 30;
+            /* Animación de pulso para un efecto mágico */
+            animation: rose-pulse 3s infinite alternate ease-in-out;
+        }
+
+        /* Animación de pulso de la rosa */
+        @keyframes rose-pulse {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.02); filter: brightness(1.2); }
+        }
+
+        /* Pétalos principales de la rosa */
+        .petal {
+            position: absolute;
+            background: radial-gradient(circle at bottom, #7eb1e1, #0156b6); /* Degradado para el color del pétalo */
+            border-radius: 50% 50% 20% 20%; /* Forma ovalada del pétalo */
+            box-shadow: 0 0 10px rgba(0, 55, 255, 0.375); /* Sombra para profundidad y brillo */
+        }
+
+        /* Posicionamiento y tamaño de los pétalos para formar la rosa */
+        .petal.p1 { width: 60px; height: 70px; top: 0; transform: rotate(10deg); z-index: 5; }
+        .petal.p2 { width: 60px; height: 70px; top: 0; transform: rotate(-10deg); z-index: 5; }
+        .petal.p3 { width: 70px; height: 80px; top: 10px; transform: rotate(0deg); z-index: 4; }
+        .petal.p4 { width: 70px; height: 80px; top: 15px; transform: rotate(20deg); left: -15px; z-index: 3; }
+        .petal.p5 { width: 70px; height: 80px; top: 15px; transform: rotate(-20deg); right: -15px; z-index: 3; }
+        .petal.p6 { width: 80px; height: 90px; top: 25px; transform: rotate(0deg); z-index: 2; }
+
+        .petal.p1,.petal.p2,.petal.p3,.petal.p4,.petal.p5,.petal.p6,.rose-center,.petal,.leaf{
+            margin-top: -60px;
+        }
+        /* Centro de la rosa */
+        .rose-center {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #0e62b1; /* Rojo oscuro para el centro */
+            border-radius: 50%;
+            top: 25px;
+            z-index: 6;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Tallo de la rosa */
+        .stem {
+            position: absolute;
+            width: 12px;
+            height: 100px;
+            background: linear-gradient(to top, #3a5f0b, #6b8e23); /* Degradado para el tallo */
+            border-radius: 4px;
+            bottom: 0; /* Posición del tallo */
+            z-index: 1;
+        }
+
+        /* Hojas de la rosa */
+        .leaf {
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            top: 65%;
+            background: linear-gradient(to right, #3a5f0b, #6b8e23); /* Degradado para las hojas */
+            border-radius: 0 50% 50% 50%; /* Forma de hoja */
+            z-index: 1;
+            transform-origin: 0% 50%; /* Punto de pivote para rotación */
+        }
+
+        .leaf.l1 { bottom: 60px; left: -15px; transform: rotate(-45deg); }
+        .leaf.l2 { bottom: 50px; right: -15px; transform: rotate(45deg); }
+
+        /* Contenedor para los pétalos que caen */
+        .falling-petals-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 40; /* Asegura que los pétalos estén sobre la rosa y debajo de la cúpula */
+            pointer-events: none; /* Permite que los clics pasen a través del contenedor */
+        }
+
+        /* Estilo de los pétalos que caen */
+        .falling-petal {
+            position: absolute;
+            background: radial-gradient(circle at bottom, #56a3eb, #0360b8); /* Color similar a los pétalos de la rosa */
+            border-radius: 50% 50% 20% 20%;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.416);
+            opacity: 0; /* Empiezan invisibles */
+            animation-fill-mode: forwards; /* Mantiene el estado final de la animación */
+            z-index: 10; /* Asegura que caen dentro de la cúpula pero sobre la rosa */
+        }
+
+        /* Animación de los pétalos que caen */
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px) rotateZ(0deg) rotateX(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(350px) rotateZ(720deg) rotateX(360deg); /* Caen y giran */
+                opacity: 0; /* Se desvanecen al caer */
+            }
+        }
+
+        /* Estilo para el botón de mensaje de la rosa */
+        .rose-message-button {
+            background-color: #e74c3c; /* Un rojo vibrante */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 9999px; /* Botón completamente redondo */
+            font-weight: bold;
+            font-size: 1.125rem; /* text-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Sombra sutil */
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Espacio entre el texto y el emoji */
+        }
+
+        .rose-message-button:hover {
+            background-color: #c0392b; /* Rojo más oscuro al pasar el ratón */
+            transform: translateY(-2px); /* Pequeño levantamiento */
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .rose-message-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Estilo para el contenedor del mensaje */
+        .message-box {
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.8), rgba(155, 89, 182, 0.8)); /* Degradado azul-morado semi-transparente */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Borde sutil */
+            backdrop-filter: blur(5px); /* Más desenfoque */
+            color: white;
+            padding: 20px; /* Más padding */
+            border-radius: 15px; /* Bordes más redondeados */
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.1); /* Sombra más pronunciada y sutil brillo interno */
+            text-align: center;
+            max-width: 90%; /* Más ancho en pantallas grandes */
+            width: 400px; /* Ancho fijo para control */
+            min-height: 80px; /* Altura mínima aumentada */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; /* Empieza oculto */
+            transform: translateY(30px); /* Ligeramente más por debajo */
+            transition: opacity 0.6s ease, transform 0.6s ease, background 0.6s ease; /* Transiciones más suaves */
+            font-size: 1.1em; /* Texto un poco más grande */
+            line-height: 1.5; /* Espaciado de línea para legibilidad */
+            margin-top: 20px; /* Espacio con el botón */
+        }
+
+        .message-box.show {
+            opacity: 1; /* Muestra el mensaje */
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center text-white p-4 absolute top-0 w-full z-50">
+        <h1 class="text-5xl font-bold mb-2">Encanto</h1>
+        <p class="text-xl italic">"Cada pétalo que caiga será un día más"</p>
+    </div>
+
+    <div class="enchanted-rose-container">
+        <div class="bell-jar">
+            <div class="falling-petals-container">
+                </div>
+        </div>
+        <div class="rose">
+            <div class="petal p1"></div>
+            <div class="petal p2"></div>
+            <div class="petal p3"></div>
+            <div class="petal p4"></div>
+            <div class="petal p5"></div>
+            <div class="petal p6"></div>
+            <div class="rose-center"></div>
+            <div class="stem"></div>
+            <div class="leaf l1"></div>
+            <div class="leaf l2"></div>
+        </div>
+    </div>
+
+    <button id="generateMessageBtn" class="rose-message-button mt-8 z-40">
+        ❤️ Palabras bonitas ❤️
+    </button>
+    <div id="messageDisplay" class="message-box z-40">
+        Pulsa el botón de la rosa para leer sus secretos...
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fallingPetalsContainer = document.querySelector('.falling-petals-container');
+            const bellJar = document.querySelector('.bell-jar');
+            const generateMessageBtn = document.getElementById('generateMessageBtn');
+            const messageDisplay = document.getElementById('messageDisplay');
+
+            // --- Lista de frases románticas personalizadas ---
+            const romanticPhrases = [
+                "Eres maravillosa, estoy muy orgulloso de ti.",
+                "Eres mi vida entera, mi sol y mis estrellas.",
+                "Esta historia solo comienza.",
+                "Mi alma te pertenece.",
+                "Somos un equipo, el mejor equipo que puede existir.",
+                "En tus ojos encuentro paz.",
+                "Estar a tu lado es mi lugar favorito en el mundo.",
+                "Cada dia dificil que tengas, yo te ayudare a mejorarlo.",
+                "No te sientas acomplejada por nada, para mi eres perfecta.",
+                "Ni el Sol se compara con el brillo de tus ojos.",
+                "Siempre te voy a buscar, hoy, mañana y más de 1 vida.",
+                "Respira profundo y sigue intentandolo. yo sé que podras.",
+            ];
+
+            // Función para generar los pétalos que caen
+            const generatePetals = () => {
+                const numberOfPetals = 30; // Número de pétalos a generar
+                const bellJarRect = bellJar.getBoundingClientRect();
+
+                for (let i = 0; i < numberOfPetals; i++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('falling-petal');
+
+                    const size = Math.random() * 15 + 10;
+                    petal.style.width = `${size}px`;
+                    petal.style.height = `${size * 0.8}px`;
+
+                    const startX = Math.random() * bellJarRect.width;
+                    petal.style.left = `${startX}px`;
+                    petal.style.top = `-${size}px`;
+
+                    const delay = Math.random() * 5;
+                    petal.style.animationDelay = `${delay}s`;
+
+                    const duration = Math.random() * 8 + 4;
+                    petal.style.animationDuration = `${duration}s`;
+
+                    petal.style.animationName = 'fall';
+                    petal.style.animationTimingFunction = 'linear';
+                    petal.style.animationIterationCount = 'infinite';
+
+                    fallingPetalsContainer.appendChild(petal);
+                }
+            };
+
+            generatePetals();
+
+            // Modificado: Ahora el botón mostrará una frase romántica aleatoria
+            generateMessageBtn.addEventListener('click', () => {
+                // Elige una frase aleatoria de la lista
+                const randomIndex = Math.floor(Math.random() * romanticPhrases.length);
+                const randomPhrase = romanticPhrases[randomIndex];
+
+                messageDisplay.textContent = randomPhrase;
+                messageDisplay.classList.add('show'); // Mostrar el cuadro de mensaje
+            });
+        });
+    </script>
+</body>
+</html>
